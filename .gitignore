@@ -7,3 +7,6 @@ Thumbs.db
 
 # IDE
 .trae/
+
+# Environment variables (API keys, tokens)
+.env
