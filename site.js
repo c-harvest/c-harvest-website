@@ -1001,7 +1001,7 @@ if (languageButtons.length > 0 && page) {
 }
 
 (function setupInquiryForm() {
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgodbgvv";
 
   const form = document.getElementById("inquiry-form");
   if (!form) return;
