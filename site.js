@@ -763,11 +763,31 @@ const translations = {
           text: "採購量級、應用領域與最終銷售市場，是我們篩選並議價的重要依據。",
         },
         c: {
-          title: "預期交期與物流條件",
-          text: "若您已有明確的專案時程或指定的交貨條件（如 FOB/CIF），請一併提供以便我們評估排程。",
+            title: "預期交期與物流條件",
+            text: "若您已有明確的專案時程或指定的交貨條件（如 FOB/CIF），請一併提供以便我們評估排程。",
+          },
+        },
+        form: {
+          eyebrow: "傳送詢價",
+          title: "填寫以下表單，直接將詢價內容發送給 C-Harvest 團隊。",
+          nameLabel: "姓名",
+          namePlaceholder: "請輸入全名",
+          emailLabel: "電子郵件",
+          emailPlaceholder: "your@email.com",
+          companyLabel: "公司名稱",
+          companyPlaceholder: "請輸入公司名稱",
+          productLabel: "產品 / 材料",
+          productPlaceholder: "您正在尋找的產品或材料？",
+          quantityLabel: "預估數量 / 目標市場",
+          quantityPlaceholder: "預估採購量與目標市場",
+          timelineLabel: "預期交期 / 物流條件",
+          timelinePlaceholder: "預期交貨時間與交貨條件",
+          messageLabel: "補充訊息",
+          messagePlaceholder: "請描述您的需求或其他補充資訊...",
+          submitLabel: "送出詢價",
+          hint: "您的詢價將直接發送給我們的團隊，我們通常在 1–2 個工作日內回覆。",
         },
       },
-    },
       en: {
         meta: {
           title: "Contact | C-Harvest Industries",
@@ -803,6 +823,26 @@ const translations = {
             title: "Expected Lead Time & Logistics",
             text: "If you have a clear project timeline or specific delivery terms (e.g., FOB/CIF), please include them so we can accurately assess scheduling.",
           },
+        },
+        form: {
+          eyebrow: "Send an Inquiry",
+          title: "Fill out the form below to send your inquiry directly to the C-Harvest team.",
+          nameLabel: "Name",
+          namePlaceholder: "Your full name",
+          emailLabel: "Email",
+          emailPlaceholder: "your@email.com",
+          companyLabel: "Company",
+          companyPlaceholder: "Your company name",
+          productLabel: "Product / Material",
+          productPlaceholder: "What product or material are you looking for?",
+          quantityLabel: "Target Quantity / Market",
+          quantityPlaceholder: "Estimated volume and destination market",
+          timelineLabel: "Timeline / Delivery",
+          timelinePlaceholder: "Expected lead time and delivery terms",
+          messageLabel: "Message",
+          messagePlaceholder: "Describe your requirements or any additional details...",
+          submitLabel: "Send Inquiry",
+          hint: "Your inquiry will be sent directly to our team. We typically respond within 1–2 business days.",
         },
       },
       de: {
@@ -840,6 +880,26 @@ const translations = {
             title: "Erwartete Lieferzeit & Logistikbedingungen",
             text: "Wenn Sie einen klaren Projektzeitplan oder spezifische Lieferbedingungen (z. B. FOB/CIF) haben, geben Sie diese bitte an, damit wir die Zeitplanung genau einschätzen können.",
           },
+        },
+        form: {
+          eyebrow: "Anfrage senden",
+          title: "Füllen Sie das Formular aus, um Ihre Anfrage direkt an das C-Harvest-Team zu senden.",
+          nameLabel: "Name",
+          namePlaceholder: "Ihr vollständiger Name",
+          emailLabel: "E-Mail",
+          emailPlaceholder: "ihre@email.com",
+          companyLabel: "Unternehmen",
+          companyPlaceholder: "Name Ihres Unternehmens",
+          productLabel: "Produkt / Material",
+          productPlaceholder: "Welches Produkt oder Material suchen Sie?",
+          quantityLabel: "Zielmenge / Markt",
+          quantityPlaceholder: "Geschätztes Volumen und Zielmarkt",
+          timelineLabel: "Zeitplan / Lieferung",
+          timelinePlaceholder: "Erwartete Lieferzeit und Lieferbedingungen",
+          messageLabel: "Nachricht",
+          messagePlaceholder: "Beschreiben Sie Ihre Anforderungen oder zusätzliche Details...",
+          submitLabel: "Anfrage senden",
+          hint: "Ihre Anfrage wird direkt an unser Team gesendet. Wir antworten in der Regel innerhalb von 1–2 Werktagen.",
         },
       },
     },
@@ -939,3 +999,75 @@ if (languageButtons.length > 0 && page) {
     });
   });
 }
+
+(function setupInquiryForm() {
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+
+  const form = document.getElementById("inquiry-form");
+  if (!form) return;
+
+  const formStatus = document.createElement("div");
+  formStatus.className = "form-status";
+  formStatus.setAttribute("role", "status");
+  formStatus.setAttribute("aria-live", "polite");
+  form.appendChild(formStatus);
+
+  function showStatus(type, messageKey) {
+    formStatus.className = "form-status form-status--" + type;
+    const lang = document.body.dataset.language || "en";
+    const messages = {
+      zh: {
+        sending: "正在送出中…",
+        success: "詢價已成功送出！我們會盡快回覆您。",
+        error: "送出失敗，請稍後再試，或直接寄信至 info@c-harvest.com。",
+      },
+      en: {
+        sending: "Sending...",
+        success: "Your inquiry has been submitted successfully. We will get back to you soon.",
+        error: "Submission failed. Please try again later, or email us directly at info@c-harvest.com.",
+      },
+      de: {
+        sending: "Wird gesendet …",
+        success: "Ihre Anfrage wurde erfolgreich gesendet. Wir werden uns bald bei Ihnen melden.",
+        error: "Übermittlung fehlgeschlagen. Bitte versuchen Sie es später erneut oder senden Sie eine E-Mail an info@c-harvest.com.",
+      },
+    };
+    formStatus.textContent = (messages[lang] || messages.en)[messageKey] || "";
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const nameInput = document.getElementById("inq-name");
+    const emailInput = document.getElementById("inq-email");
+    if (!nameInput.value.trim() || !emailInput.value.trim()) {
+      showStatus("error", "error");
+      return;
+    }
+
+    const submitButton = form.querySelector("button[type='submit']");
+    if (submitButton) submitButton.disabled = true;
+    showStatus("sending", "sending");
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(form),
+      });
+
+      if (response.ok) {
+        showStatus("success", "success");
+        form.querySelectorAll("input, textarea").forEach(function (el) {
+          if (el.type !== "submit") el.value = "";
+        });
+      } else {
+        showStatus("error", "error");
+      }
+    } catch (_err) {
+      showStatus("error", "error");
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
+  });
+})();
