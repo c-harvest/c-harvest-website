@@ -62,6 +62,11 @@ img {
   max-width: 100%;
 }
 
+p, h1, h2, h3, span, a, li {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 main {
   display: grid;
   gap: 26px;
