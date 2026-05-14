@@ -1,0 +1,9 @@
+# Delivery artifacts
+delivery/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.trae/
